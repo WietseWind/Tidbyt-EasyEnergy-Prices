@@ -84,6 +84,7 @@ const render = async res => {
 
   const svg = `
     <svg width="64" fill="black" height="32" viewBox="0 0 64 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      ${minCt < 0 ? `<rect x="0" y="${zero}" fill="#519B53" opacity=".3" height="${32-zero}" width="64" />` : ``}
       ${_midnightTill7}
       ${_7till12}
       ${_12till18}
