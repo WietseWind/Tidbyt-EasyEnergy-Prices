@@ -49,12 +49,12 @@ const [ _midnightTill7, _7till12, _12till18, _18tillNight ] = [0, 1, 2, 3].map(s
   const rates = hourlyRates.slice(section * 6, (section + 1) * 6)
   return rates.map((r, i) => {
     if (i === 0 && section > 0) {
-      pos += 2
+      pos += 1
     }
 
-    const width = section === 1 || section === 2
-      ? 2
-      : 2
+    const width = section === 2
+      ? 3
+      : 1
 
     const x = pos
 
@@ -65,7 +65,7 @@ const [ _midnightTill7, _7till12, _12till18, _18tillNight ] = [0, 1, 2, 3].map(s
     const height = Math.abs(r * ctHeight)
 
     pos += width
-    pos += section === 2 ? 2 : 0
+    pos += section === 2 && i < 5 ? 1 : 0 // Extra spacing between hours during afternoon, if not the last before evening
 
     const fill = section === 0 || section === 3
       ? 'white'
@@ -84,12 +84,20 @@ const render = async res => {
 
   const svg = `
     <svg width="64" fill="black" height="32" viewBox="0 0 64 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-      ${minCt < 0 ? `<rect x="0" y="${zero}" fill="#519B53" opacity=".3" height="${32-zero}" width="64" />` : ``}
+      ${minCt < 0 ? `<rect x="0" y="${zero}" fill="#519B53" opacity=".3" height="${32-zero}" width="44" />` : ``}
       ${_midnightTill7}
       ${_7till12}
       ${_12till18}
       ${_18tillNight}
       <rect x="0" y="${zero}" fill="black" height="1" width="64" />
+
+      <text x="64" y="11" fill="white" text-anchor="end" style="font-family: Arial; font-weight: 600; font-size: 13px">
+        ${maxCt}
+      </text>
+      <text x="64" y="31" fill="white" text-anchor="end" style="font-family: Arial; font-weight: 600; font-size: 13px">
+        ${minCt}
+      </text>
+
     </svg>
   `
   
