@@ -25,7 +25,13 @@ const c = await fetch(`https://mijn.easyenergy.com/nl/api/tariff/GetApxTariffs?s
 const parser = new DOMParser()
 const document = parser.parseFromString(await c.text(), 'text/xml')
 const tariffs = JSON.parse(document.firstChild.data)
-const hourlyRates = tariffs.map(t => t.TariffUsage * 100)
+
+let hourlyRates = tariffs.map(t => Math.round(t.TariffUsage * 100))
+
+if (hourlyRates.length < 1) {
+  const cBackup = await (await fetch(`https://api.energyzero.nl/v1/energyprices?fromDate=${startDate}&tillDate=${endDate}&interval=4&usageType=1&inclBtw=true`).json()
+  hourlyRates = cBackup.Prices.map(t => Math.round(t.price * 100))
+}
 
 /* ************************************************ */
 
